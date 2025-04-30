@@ -11,6 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{05618659-5114-45BE-B939-328D9ABCC9C6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{996EEABA-3D7E-40EF-9419-0B6D6A2F6B69}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{38E7669C-FAA6-4FF2-98ED-9B02CA6CE6A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{264FCCB9-4161-4BED-89A5-FA01A7D4D97A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +39,20 @@ Global
 		{05618659-5114-45BE-B939-328D9ABCC9C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05618659-5114-45BE-B939-328D9ABCC9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05618659-5114-45BE-B939-328D9ABCC9C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{264FCCB9-4161-4BED-89A5-FA01A7D4D97A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{264FCCB9-4161-4BED-89A5-FA01A7D4D97A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{264FCCB9-4161-4BED-89A5-FA01A7D4D97A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{264FCCB9-4161-4BED-89A5-FA01A7D4D97A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{897566C1-A67E-4BEE-9F43-3F612D1BAF6F} = {996EEABA-3D7E-40EF-9419-0B6D6A2F6B69}
+		{12C5DA6B-9793-4474-8793-BF5B58C529AE} = {996EEABA-3D7E-40EF-9419-0B6D6A2F6B69}
+		{5FE26E1C-9101-44AA-9882-96BFFCA11582} = {996EEABA-3D7E-40EF-9419-0B6D6A2F6B69}
+		{05618659-5114-45BE-B939-328D9ABCC9C6} = {996EEABA-3D7E-40EF-9419-0B6D6A2F6B69}
+		{264FCCB9-4161-4BED-89A5-FA01A7D4D97A} = {38E7669C-FAA6-4FF2-98ED-9B02CA6CE6A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C02E3D70-37D5-416C-82B6-E2F1D3339073}
