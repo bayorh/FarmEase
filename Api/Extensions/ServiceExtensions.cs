@@ -28,6 +28,7 @@ public static class ServiceExtensions
     {
         services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IWacsService, WacsService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddTransient<IEmailService, SmtpEmailService>();

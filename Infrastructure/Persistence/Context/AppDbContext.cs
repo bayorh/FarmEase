@@ -12,5 +12,8 @@ public class AppDbContext : DbContext
         
     }
     public DbSet<User> Users { get; set; }
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<LoanProduct> LoanProducts { get; set; }
+    public DbSet<Loan> Loans { get; set; }
   
 }
