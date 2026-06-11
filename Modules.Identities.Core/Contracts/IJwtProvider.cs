@@ -1,7 +1,6 @@
 ﻿
 
 using Modules.Identities.Core.Entities;
-using System.Security.Claims;
 
 namespace Modules.Identities.Core.Contracts
 {
