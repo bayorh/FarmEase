@@ -9,7 +9,6 @@ public class IdentitiesDbContext(DbContextOptions<IdentitiesDbContext> options)
     : ModuleDbContext(options), IIdentitiesDbContext
 {
     protected override string Schema => "Identities";
-
     public DbSet<User> Users { get; set; } 
 
 }

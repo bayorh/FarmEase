@@ -1,24 +1,35 @@
 using Microsoft.OpenApi.Models;
+using Modules.Identities.Extensions;
+using Scalar.AspNetCore;
 using Shared.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+// Log.Logger = new LoggerConfiguration()
+//            .ReadFrom.Configuration(builder.Configuration)
+//            .WriteTo.Console()
+//            .WriteTo.File("C:\\Logs\\FarmEaseLog.txt")
+//            .CreateLogger();
+
 
 // Add services to the container.
 
-    builder.Services.AddSharedInfrastructure(builder.Configuration);
-   // builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" }); });
+builder.Services.AddSharedInfrastructure(builder.Configuration);
+builder.Services.AddIdentitiesModule(builder.Configuration);
+
+builder.Services.AddOpenApi();
 
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+//builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi();             
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
