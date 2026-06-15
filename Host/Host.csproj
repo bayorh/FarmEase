@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules.Identities\Modules.Identities.csproj" />
-    <ProjectReference Include="..\Shared.Infrastructure\Shared.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
