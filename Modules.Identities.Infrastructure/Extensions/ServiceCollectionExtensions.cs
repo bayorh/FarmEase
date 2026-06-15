@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Modules.Identities.Core.Contracts;
+using Modules.Identities.Infrastructure.Helpers;
 using Modules.Identities.Infrastructure.Persistence;
 using Shared.Infrastructure.Extensions;
 

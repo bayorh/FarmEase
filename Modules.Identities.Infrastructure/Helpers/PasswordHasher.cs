@@ -1,6 +1,6 @@
 using Modules.Identities.Core.Contracts;
 
-namespace Modules.Identities.Infrastructure.Persistence;
+namespace Modules.Identities.Infrastructure.Helpers;
 
 public class PasswordHasher : IPasswordHasher
 {

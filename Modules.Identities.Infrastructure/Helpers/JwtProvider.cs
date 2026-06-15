@@ -1,7 +1,7 @@
 using Modules.Identities.Core.Contracts;
 using Modules.Identities.Core.Entities;
 
-namespace Modules.Identities.Infrastructure.Persistence;
+namespace Modules.Identities.Infrastructure.Helpers;
 
 public class JwtProvider : IJwtProvider
 {
