@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Modules.Identities.Core.Features.Commands.Users.LoginUser;
 using Modules.Identities.Core.Features.Commands.Users.Register;
 using Modules.Identities.Core.Features.Commands.Users.ResetPassword;
+using Shared.Core.Dtos;
 using Shared.Dispatcher;
 
 namespace Modules.Identities.Controllers;
 
-[Route("api/Users")]
+[Route("api/auth")]
 [ApiController]
 [ApiExplorerSettings(GroupName = "v1")]
 [Authorize]
@@ -17,7 +18,7 @@ public class AuthController(ISender sender): ControllerBase
 {
     [AllowAnonymous]
     [HttpPost("login")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<LoginUserResponseDto>),StatusCodes.Status200OK)]
 
     public async Task<IActionResult> Login([FromBody]LoginUserCommand request)
     {
@@ -26,8 +27,8 @@ public class AuthController(ISender sender): ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost("Register")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [HttpPost("register")]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
 
     public async Task<IActionResult> Register([FromBody]RegisterUserCommand request)
     {

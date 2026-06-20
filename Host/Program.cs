@@ -20,6 +20,19 @@ builder.Services.AddIdentitiesModule(builder.Configuration);
 builder.Services.AddOpenApi();
 builder.Services.Configure<Jwt>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddCors(options =>
+{
+  
+    var origins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
+                  ?? Array.Empty<string>();
+
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins(origins)
+            .WithMethods("GET", "POST", "PUT", "DELETE")
+            .WithHeaders("Content-Type", "Authorization", "Accept");
+    });
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -27,6 +40,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+app.UseCors("AllowSpecificOrigins");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
