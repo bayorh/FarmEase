@@ -1,0 +1,74 @@
+
+@page "/register"
+@layout Layout.AuthLayout
+@inherits Microsoft.AspNetCore.Components.ComponentBase
+
+<div class="register-container">
+    <h3 class="text-center mb-4">Create Account</h3>
+
+    @if (!string.IsNullOrEmpty(GlobalMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong>Error:</strong> @GlobalMessage
+        </div>
+    }
+
+    @if (ApiErrors != null && ApiErrors.Any())
+    {
+        <div class="alert alert-warning py-2 small" role="alert">
+            <ul class="mb-0 ps-3">
+                @foreach (var error in ApiErrors)
+                {
+                    <li>@error</li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (IsSuccess)
+    {
+        <div class="alert alert-success" role="alert">
+            Registration successful! Redirecting to login portal...
+        </div>
+    }
+    else
+    {
+        <EditForm Model="RegisterModel" OnSubmit="HandleRegistration">
+
+            <div class="form-group mb-3">
+                <label class="form-label">Username</label>
+                <InputText @bind-Value="RegisterModel.Username" class="form-control" placeholder="Choose a username" />
+                <ValidationMessage For="() => RegisterModel.Username" class="text-danger small" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label">Email Address</label>
+                <InputText @bind-Value="RegisterModel.Email" class="form-control" placeholder="name@example.com" />
+                <ValidationMessage For="() => RegisterModel.Email" class="text-danger small" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label">Password</label>
+                <InputText @bind-Value="RegisterModel.Password" type="password" class="form-control" placeholder="••••••••" />
+                <ValidationMessage For="() => RegisterModel.Password" class="text-danger small" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3" disabled="@IsSubmitting">
+                @if (IsSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span> Submitting...</span>
+                }
+                else
+                {
+                    <span>Register</span>
+                }
+            </button>
+        </EditForm>
+
+        <div class="text-center mt-4 small">
+            <span>Already have an account? </span>
+            <a href="/login" class="text-decoration-none">Sign In</a>
+        </div>
+    }
+</div>

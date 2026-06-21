@@ -1,70 +1,59 @@
-using System.Net;
-using System.Net.Http.Json;
 using FarmEaseApp.AuthProviders;
-using FarmEaseApp.Dtos;
 using FarmEaseApp.Models;
+using FarmEaseApp.Services.Auth;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace FarmEaseApp.Pages;
 
-public partial class Login(HttpClient httpClient) : ComponentBase
+public partial class Login : ComponentBase
 {
-    private LoginModel loginModel = new();
-    private string? errorMessage;
-    private bool isSubmitting = false;
+    [Inject] protected IAuthService AuthService { get; set; } = default!;
+    [Inject] protected AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
+    [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
 
-    private async Task HandleLogin()
+    protected LoginModel LoginModel { get; set; } = new();
+    protected string? ErrorMessage { get; set; }
+    protected List<string>? ApiErrors { get; set; }
+    protected bool IsSubmitting { get; set; }
+
+
+    protected async Task HandleLogin()
     {
-        isSubmitting = true;
-        errorMessage = null;
+        IsSubmitting = true;
+        ErrorMessage = null;
+        ApiErrors = null;
 
-        // 1. Call your API to validate credentials & get the token
-        try
-        {
-            // 1. Post credentials to your backend API
-            var response = await httpClient.PostAsJsonAsync("api/Users/login", loginModel);
-            if (response.IsSuccessStatusCode)
-            {
-                // 2. Extract the JWT token from the successful response
-                var result = await response.Content.ReadFromJsonAsync<Result<LoginDto>>();
+        var validator = new LoginModelValidator();
+        var validationResult = await validator.ValidateAsync(LoginModel);
 
-                if (result != null && !string.IsNullOrEmpty(result.Data.Token))
-                {
-                    // Update the custom AuthenticationStateProvider 
-                    // This handles storage and notifies the cascading state UI
-                    if (AuthStateProvider is AuthStateProvider authProvider)
-                    {
-                        await authProvider.MarkUserAsAuthenticated(result.Data.Token);
-                    }
+        if (!validationResult.IsValid)
+        {
+            // Map validation errors directly to the UI list
+            ApiErrors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+            IsSubmitting = false;
+            return;
+        }
 
-                    // Redirect to home or return URL
-                    NavigationManager.NavigateTo("/");
-                }
-                else
-                {
-                    errorMessage = "Invalid server response. Please try again.";
-                }
-            }
-            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+        // Process credentials through the Service Layer
+        var result = await AuthService.LoginAsync(LoginModel);
+
+        if (result.IsSuccess && result.Data?.Token != null)
+        {
+            // Update secure browser state with custom provider downcast pattern
+            if (AuthStateProvider is AuthStateProvider customProvider)
             {
-                errorMessage = "Invalid email or password.";
+                await customProvider.MarkUserAsAuthenticated(result.Data.Token);
             }
-            else
-            {
-                errorMessage = "An error occurred on the server. Please try again later.";
-            }
+
+            NavigationManager.NavigateTo("/");
         }
-        catch (HttpRequestException)
+        else
         {
-            errorMessage = "Unable to connect to the server. Check your network connection.";
-        }
-        catch (Exception ex)
-        {
-            errorMessage = $"An unexpected error occurred: {ex.Message}";
-        }
-        finally
-        {
-            isSubmitting = false;
+            // Bind the custom Result envelope failures to the UI tracking properties
+            ErrorMessage = result.Message;
+            ApiErrors = result.Errors;
+            IsSubmitting = false;
         }
     }
 }

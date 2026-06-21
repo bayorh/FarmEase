@@ -1,16 +1,95 @@
 ﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu/>
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
+
+<div class="page text-dark bg-light minimum-vh-100 d-flex flex-column">
+
+    @* Dynamic Global Application Header Top Bar *@
+    <header class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-4 py-2 mb-4 justify-content-between">
+        <a class="navbar-brand fw-bold" href="/">
+            <span class="bi bi-flower1 me-2 text-success"></span>FarmEase
+        </a>
+
+        <div class="d-flex align-items-center">
+            <AuthorizeView>
+                <Authorized>
+                    @* Content shown ONLY to successfully logged-in production profiles *@
+                    <span class="navbar-text me-3 text-white-50">
+                        Hello, <strong class="text-white">@context.User.Identity?.Name</strong>
+                    </span>
+                    <button class="btn btn-outline-danger btn-sm" @onclick="HandleLogout">
+                        <span class="bi bi-box-arrow-left me-1"></span>Logout
+                    </button>
+                </Authorized>
+                <NotAuthorized>
+                    @* Action links visible to public guests or unauthenticated users *@
+                    <div class="btn-group">
+                        <NavLink class="btn btn-sm btn-outline-light px-3" href="login" Match="NavLinkMatch.All">
+                            <span class="bi bi-box-arrow-in-right me-1"></span>Sign In
+                        </NavLink>
+                        <NavLink class="btn btn-sm btn-success px-3" href="register" Match="NavLinkMatch.All">
+                            <span class="bi bi-person-plus me-1"></span>Join Now
+                        </NavLink>
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+    </header>
+
+    @* Primary Routing View Container Body *@
+    <main class="container flex-grow-1">
+        <AuthorizeView>
+            <Authorized>
+                @* Fully Authenticated User View Mode: Renders Side Bar and Main Content grid Layout *@
+                <div class="row m-0">
+                    <aside class="col-md-3 p-0 mb-4 pe-md-4">
+                        <div class="card border-0 shadow-sm p-3 bg-white rounded">
+                            <h6 class="text-uppercase text-muted fw-bold small tracking-wider px-2 mb-3">Management
+                                Portal</h6>
+                                <nav class="nav flex-column nav-pills">
+                                    <NavLink class="nav-link mb-1 text-secondary" href="" Match="NavLinkMatch.All">
+                                        <span class="bi bi-house-door me-2"></span>Dashboard Home
+                                    </NavLink>
+                                    <NavLink class="nav-link mb-1 text-secondary" href="analytics">
+                                        <span class="bi bi-graph-up me-2"></span>Crop Analytics
+                                    </NavLink>
+                                    <NavLink class="nav-link text-secondary" href="settings">
+                                        <span class="bi bi-gear me-2"></span>Account Settings
+                                    </NavLink>
+                                </nav>
+                            </div>
+                        </aside>
+                        <section class="col-md-9 p-0">
+                            @Body
+                        </section>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    @* Public Guest Mode Default Inner View Layout wrapper *@
+                    <div class="card border-0 shadow-sm p-4 mb-5 bg-white rounded text-center">
+                        @Body
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
+        </main>
+
+        @* Uniform Global Sticky Footer Module *@
+        <footer class="text-center py-3 border-top mt-auto bg-white text-muted small shadow-sm">
+            &copy; @DateTime.UtcNow.Year FarmEaseApp Ecosystem. All rights reserved.
+        </footer>
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="/login" target="_blank">Login</a>
-        </div>
+@code {
+    private async Task HandleLogout()
+    {
+        // Cast state management instance down to trigger persistence erasure
+        if (AuthStateProvider is FarmEaseApp.AuthProviders.AuthStateProvider customProvider)
+        {
+            await customProvider.MarkUserAsLoggedOut();
+        }
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+        // Force browser update cleanly routing straight back to the landing login prompt
+        NavigationManager.NavigateTo("/login");
+    }
+}

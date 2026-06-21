@@ -9,7 +9,6 @@ public sealed record RegisterRequest
     public string Password { get; set; } = string.Empty;
 }
 
-
 public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {
     public RegisterRequestValidator()
